@@ -87,6 +87,16 @@ labels = {v: k for k, v in class_indices.items()}
 # STREAMLIT 
 st.title("🐝 Bee Classification App")
 
+st.markdown(
+    """
+    <p style='text-align:center; font-size:16px; color:black;'>
+        <b>Sharla Martiza Yunani</b><br>
+        Universitas Lampung
+    </p>
+    """,
+    unsafe_allow_html=True
+)
+
 uploaded_file = st.file_uploader(
     "Upload gambar lebah",
     type=["jpg", "jpeg", "png"]
