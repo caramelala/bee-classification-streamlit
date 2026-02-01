@@ -1,3 +1,50 @@
+# CUSTOM CSS / TAMPILAN STREAMLIT
+# Mengatur background gradasi kuning-hitam, warna teks, card uploader, dan tombol
+
+import streamlit as st
+
+st.markdown(
+    """
+    <style>
+    /* Background utama */
+    .stApp {
+        background: linear-gradient(135deg, #FFD700, #000000);
+        color: white;
+    }
+
+    /* Card / container */
+    section[data-testid="stFileUploader"] {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    /* Judul */
+    h1, h2, h3 {
+        color: #000000;
+        text-align: center;
+    }
+
+    /* Teks */
+    p, label {
+        color: #000000;
+    }
+
+    /* Button */
+    button {
+        background-color: #FFD700 !important;
+        color: black !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# DOWNLOAD & LOAD MODEL DARI GOOGLE DRIVE
+# Jika file model belum ada, maka otomatis di download kemudian dimuat ke TensorFlow
+
 import gdown
 import os
 
@@ -8,7 +55,7 @@ URL = "https://drive.google.com/uc?id=1Fon44bP4ey694wiu0wB_u2IhUG_i1nqV"
 if not os.path.exists(MODEL_PATH):
     gdown.download(URL, MODEL_PATH, quiet=False)
 
-
+# STREAMLIT UI & PROSES PREDIKSI GAMBAR
 
 import streamlit as st
 import tensorflow as tf
