@@ -1,2 +1,1 @@
-# bee-classification-streamlit
-skripsi
+
