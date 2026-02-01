@@ -1,76 +1,64 @@
+import gdown
+import os
+
+MODEL_PATH = "model_baseline.h5"
+
+URL = "https://drive.google.com/uc?id=1Fon44bP4ey694wiu0wB_u2IhUG_i1nqV"
+
+if not os.path.exists(MODEL_PATH):
+    gdown.download(URL, MODEL_PATH, quiet=False)
+
+
+
+import streamlit as st
 import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications import VGG16
-from tensorflow.keras.layers import Input, GlobalAveragePooling2D, Dense, Dropout
-from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
-import os, json
-
-BASE = "/content/drive/MyDrive/Dataset_Split"
-
-TRAIN_DIR = os.path.join(BASE,"train")
-VAL_DIR   = os.path.join(BASE,"val")
-
-IMG_SIZE = (224,224)
-BATCH = 32
-EPOCH = 30
-
-datagen = ImageDataGenerator(rescale=1./255)
-
-train_gen = datagen.flow_from_directory(
-    TRAIN_DIR,
-    target_size=IMG_SIZE,
-    batch_size=BATCH,
-    class_mode="categorical",
-    shuffle=True)
-
-val_gen = datagen.flow_from_directory(
-    VAL_DIR,
-    target_size=IMG_SIZE,
-    batch_size=BATCH,
-    class_mode="categorical",
-    shuffle=False)
-
-NUM_CLASSES = train_gen.num_classes
-
-base_model = VGG16(
-    weights="imagenet",
-    include_top=False,
-    input_shape=(224,224,3)
-)
-
-for layer in base_model.layers:
-    layer.trainable = False
-
-inp = Input(shape=(224,224,3))
-x = base_model(inp, training=False)
-x = GlobalAveragePooling2D()(x)
-x = Dense(128, activation="relu")(x)
-x = Dropout(0.3)(x)
-out = Dense(NUM_CLASSES, activation="softmax")(x)
-
-model_baseline = Model(inp,out)
-
-model_baseline.compile(
-    optimizer=Adam(1e-4),
-    loss="categorical_crossentropy",
-    metrics=["accuracy"]
-)
-
-model_baseline.summary()
-
-history_baseline = model_baseline.fit(
-    train_gen,
-    validation_data=val_gen,
-    epochs=EPOCH
-)
-
-model_baseline.save("/content/drive/MyDrive/model_baseline.h5")
-
-with open("/content/drive/MyDrive/history_baseline.json","w") as f:
-    json.dump(history_baseline.history,f)
-
+import numpy as np
 import json
+import os
+import gdown
+from PIL import Image
 
-with open("/content/drive/MyDrive/class_indices.json","w") as f:
-    json.dump(train_gen.class_indices,f)
+# DOWNLOAD MODEL DARI DRIVE
+MODEL_PATH = "model_baseline.h5"
+
+URL = "https://drive.google.com/uc?id=1Fon44bP4ey694wiu0wB_u2IhUG_i1nqV"
+
+if not os.path.exists(MODEL_PATH):
+    with st.spinner("Downloading model..."):
+        gdown.download(URL, MODEL_PATH, quiet=False)
+
+
+# LOAD MODEL
+model = tf.keras.models.load_model(MODEL_PATH)
+
+# LOAD CLASS INDICES
+with open("class_indices.json") as f:
+    class_indices = json.load(f)
+
+labels = {v: k for k, v in class_indices.items()}
+
+# STREAMLIT 
+st.title("🐝 Bee Classification App")
+
+uploaded_file = st.file_uploader(
+    "Upload gambar lebah",
+    type=["jpg", "jpeg", "png"]
+)
+
+# PREPROCESS & PREDICT
+if uploaded_file:
+
+    img = Image.open(uploaded_file).convert("RGB")
+
+    st.image(img, caption="Uploaded Image", use_column_width=True)
+
+    img = img.resize((224, 224))
+
+    img_array = np.array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+
+    pred = model.predict(img_array)
+
+    idx = np.argmax(pred)
+
+    st.success(f"Prediksi: **{labels[idx]}**")
