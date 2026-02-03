@@ -1,3 +1,48 @@
+import streamlit as st
+
+# CSS Watermark
+st.markdown("""
+<style>
+.watermark {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    opacity: 0.25;
+    font-size: 14px;
+    color: gray;
+    z-index: 9999;
+}
+</style>
+
+<div class="watermark">
+© Skripsi CNN – VGG16 | Sharla Martiza Yunani
+</div>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+.center-watermark {
+    position: fixed;
+    top: 10%;
+    left: 5%;
+    opacity: 0.10;
+    font-size: 350px;
+    color: gray;
+    transform: rotate(-1deg);
+    z-index: 9999;
+}
+</style>
+
+<div class="center-watermark">
+SHARLA 
+</div>
+""", unsafe_allow_html=True)
+
+
+
+
 # CUSTOM CSS / TAMPILAN STREAMLIT
 # Mengatur background gradasi kuning-hitam, warna teks, card uploader, dan tombol
 
