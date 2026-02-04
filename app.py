@@ -6,7 +6,7 @@ st.markdown("""
 .watermark {
     position: fixed;
     bottom: 10px;
-    right: 15px;
+    left: 15px;
     opacity: 0.25;
     font-size: 14px;
     color: gray;
