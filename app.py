@@ -25,12 +25,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD MODEL DARI GOOGLE DRIVE
+
 MODEL_PATH = "model_afterAug_FT.h5"
 URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
 
-if not os.path.exists(MODEL_PATH):
-    with st.spinner("Downloading model..."):
-        gdown.download(URL, MODEL_PATH, quiet=False)
+if os.path.exists(MODEL_PATH):
+    os.remove(MODEL_PATH)
+
+with st.spinner("Downloading model..."):
+    gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
 
 # LOAD MODEL
 model = tf.keras.models.load_model(MODEL_PATH)
