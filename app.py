@@ -23,9 +23,9 @@ st.markdown("""
 import gdown
 import os
 
-MODEL_PATH = "model_baseline.h5"
+MODEL_PATH = "model_afterAug_FT.h5"
 
-URL = "https://drive.google.com/uc?id=1Fon44bP4ey694wiu0wB_u2IhUG_i1nqV"
+URL = "https://drive.google.com/drive/search?q=H5"
 
 if not os.path.exists(MODEL_PATH):
     gdown.download(URL, MODEL_PATH, quiet=False)
@@ -41,9 +41,9 @@ import gdown
 from PIL import Image
 
 # DOWNLOAD MODEL DARI DRIVE
-MODEL_PATH = "model_baseline.h5"
+MODEL_PATH = "model_afterAug_FT.h5"
 
-URL = "https://drive.google.com/uc?id=1Fon44bP4ey694wiu0wB_u2IhUG_i1nqV"
+URL = "https://drive.google.com/drive/search?q=H5"
 
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
