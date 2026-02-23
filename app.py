@@ -20,8 +20,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD & LOAD MODEL DARI GOOGLE DRIVE
-# Jika file model belum ada, maka otomatis di download kemudian dimuat ke TensorFlow
-
 import gdown
 import os
 
@@ -95,7 +93,7 @@ if uploaded_file:
     confidence = np.max(pred)
     idx = np.argmax(pred)
 
-    THRESHOLD = 0.6  # bisa ubah ke 0.5 / 0.7 sesuai kebutuhan
+    THRESHOLD = 0.6  
 
     if confidence < THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
