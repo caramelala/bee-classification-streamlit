@@ -98,7 +98,7 @@ if uploaded_file:
     THRESHOLD = 0.6  # bisa ubah ke 0.5 / 0.7 sesuai kebutuhan
 
     if confidence < THRESHOLD:
-    st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
+        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
     else:
-    st.success(f"Prediksi: **{labels[idx]}**")
-    st.write(f"Confidence: {confidence:.2f}")
+        st.success(f"Prediksi: **{labels[idx]}**")
+        st.write(f"Confidence: {confidence:.2f}")
