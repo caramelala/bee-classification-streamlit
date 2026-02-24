@@ -80,12 +80,27 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    pred = model.predict(img_array)
+    pred = model.predict(img_array)[0]
+
     confidence = np.max(pred)
     idx = np.argmax(pred)
 
-    THRESHOLD = 0.75 
-    if confidence < THRESHOLD:
+    # Ambil top 2 probability
+    sorted_pred = np.sort(pred)
+    top1 = sorted_pred[-1]
+    top2 = sorted_pred[-2]
+    gap = top1 - top2
+
+    THRESHOLD = 0.80
+    GAP_THRESHOLD = 0.40
+
+    # DEBUG (boleh dihapus nanti)
+    st.write("Top1:", top1)
+    st.write("Top2:", top2)
+    st.write("Gap :", gap)
+
+    # LOGIC UNKNOWN
+    if confidence < THRESHOLD or gap < GAP_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
     else:
         st.success(f"Prediksi: **{labels[idx]}**")
