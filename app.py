@@ -25,12 +25,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD MODEL DARI GOOGLE DRIVE
-
 MODEL_PATH = "model_afterAug_FT.h5"
 URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
 
-if os.path.exists(MODEL_PATH):
-    os.remove(MODEL_PATH)
+if not os.path.exists(MODEL_PATH):
+    with st.spinner("Downloading model..."):
+        gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
+
+model = tf.keras.models.load_model(MODEL_PATH)
 
 with st.spinner("Downloading model..."):
     gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
@@ -75,8 +77,10 @@ if uploaded_file:
     confidence = np.max(pred)
     idx = np.argmax(pred)
 
-    THRESHOLD = 0.6  
-
+    THRESHOLD = 0.8 
+    st.write("Raw prediction:", pred)
+    st.write("Max confidence:", confidence)
+    
     if confidence < THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
     else:
