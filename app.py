@@ -85,5 +85,10 @@ if uploaded_file:
     confidence = np.max(pred)
     idx = np.argmax(pred)
 
-    st.success(f"Prediksi: **{labels[idx]}**")
-    st.write(f"Confidence: {confidence:.4f}")
+    THRESHOLD = 0.80  # bisa kamu ubah 0.75–0.85 sesuai kebutuhan
+
+    if confidence < THRESHOLD:
+        st.warning("Prediksi: **Unknown**")
+    else:
+        st.success(f"Prediksi: **{labels[idx]}**")
+        st.write(f"Confidence: {confidence:.4f}")
