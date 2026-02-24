@@ -43,7 +43,8 @@ logits_model = tf.keras.Model(
 # LOAD CLASS INDICES
 with open("class_indices.json") as f:
     class_indices = json.load(f)
-labels = {v: k for k, v in class_indices.items()}
+
+labels = {int(v): k for k, v in class_indices.items()}
 
 # STREAMLIT UI
 st.title("🐝 Bee Classification App")
@@ -64,28 +65,9 @@ uploaded_file = st.file_uploader(
 )
 
 # PREPROCESS & PREDICT
-if uploaded_file:
-    img = Image.open(uploaded_file).convert("RGB")
-    st.image(img, caption="Uploaded Image", use_column_width=True)
+idx = int(np.argmax(pred))
 
-    img = img.resize((224, 224))
-    img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
-
-    # Softmax prediction
-    probs = model.predict(img_array, verbose=0)[0]
-
-    # Logits prediction
-    logits = logits_model.predict(img_array, verbose=0)[0]
-
-    # ENERGY SCORE (log-sum-exp)
-    energy = -np.log(np.sum(np.exp(logits)))
-
-    # THRESHOLD ENERGY 
-    ENERGY_THRESHOLD = 9.8
-
-    if energy > ENERGY_THRESHOLD:
-        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
-    else:
-        idx = np.argmax(probs)
-        st.success(f"Prediksi: **{labels[idx]}**")
+if idx not in labels:
+    st.warning("Prediksi: **Unknown (label tidak dikenali model)**")
+else:
+    st.success(f"Prediksi: **{labels[idx]}**")
