@@ -64,8 +64,18 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-pred = model.predict(img_array)
-confidence = np.max(pred)
+pred = model.predict(img_array)[0]
+
+# Hitung entropy
+entropy = -np.sum(pred * np.log(pred + 1e-8))
+
 idx = np.argmax(pred)
-    st.success(f"Prediksi: **{labels[idx]}**")
-    st.write(f"Confidence: {confidence:.2f}")
+label = labels[idx]
+
+# Threshold entropy (empiris, bisa 1.2–1.5)
+ENTROPY_THRESHOLD = 1.3
+
+if entropy > ENTROPY_THRESHOLD:
+    st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
+else:
+    st.success(f"Prediksi: **{label}**")
