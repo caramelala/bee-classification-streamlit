@@ -68,7 +68,7 @@ pred = model.predict(img_array)
 confidence = np.max(pred)
 idx = np.argmax(pred)
 
-THRESHOLD = 0.6  # bisa ubah ke 0.5 / 0.7 sesuai kebutuhan
+THRESHOLD = 0.9
 
 if confidence < THRESHOLD:
     st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
