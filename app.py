@@ -80,15 +80,8 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    pred = model.predict(img_array)[0]
-
-    confidence = np.max(pred)
+    pred = model.predict(img_array)
     idx = np.argmax(pred)
+    st.success(f"Prediksi: **{labels[idx]}**")
 
-    THRESHOLD = 0.80  # bisa kamu ubah 0.75–0.85 sesuai kebutuhan
-
-    if confidence < THRESHOLD:
-        st.warning("Prediksi: **Unknown**")
-    else:
-        st.success(f"Prediksi: **{labels[idx]}**")
-        st.write(f"Confidence: {confidence:.4f}")
+    
