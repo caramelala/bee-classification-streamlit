@@ -77,10 +77,7 @@ if uploaded_file:
     confidence = np.max(pred)
     idx = np.argmax(pred)
 
-    THRESHOLD = 0.8 
-    st.write("Raw prediction:", pred)
-    st.write("Max confidence:", confidence)
-    
+    THRESHOLD = 0.85 
     if confidence < THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
     else:
