@@ -65,17 +65,14 @@ if uploaded_file:
     img_array = np.expand_dims(img_array, axis=0)
 
 pred = model.predict(img_array)[0]
+sorted_pred = np.sort(pred)
 
-# Hitung entropy
-entropy = -np.sum(pred * np.log(pred + 1e-8))
-
+gap = sorted_pred[-1] - sorted_pred[-2]
 idx = np.argmax(pred)
-label = labels[idx]
 
-# Threshold entropy (empiris, bisa 1.2–1.5)
-ENTROPY_THRESHOLD = 1.3
+GAP_THRESHOLD = 0.25
 
-if entropy > ENTROPY_THRESHOLD:
+if gap < GAP_THRESHOLD:
     st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
 else:
-    st.success(f"Prediksi: **{label}**")
+    st.success(f"Prediksi: **{labels[idx]}**")
