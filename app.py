@@ -5,6 +5,7 @@ import json
 import os
 import gdown
 from PIL import Image
+import scipy.stats as stats
 
 # CSS WATERMARK
 st.markdown("""
@@ -54,8 +55,6 @@ uploaded_file = st.file_uploader(
     "Upload gambar lebah",
     type=["jpg", "jpeg", "png"]
 )
-
-import scipy.stats as stats
 
 # PREPROCESS & PREDICT
 if uploaded_file:
