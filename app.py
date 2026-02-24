@@ -71,7 +71,20 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    preds = model.predict(img_array, verbose=0)[0]
-    idx = np.argmax(preds)
+    # Softmax prediction
+    probs = model.predict(img_array, verbose=0)[0]
 
-    st.success(f"Prediksi: **{labels[idx]}**")
+    # Logits prediction
+    logits = logits_model.predict(img_array, verbose=0)[0]
+
+    # ENERGY SCORE (log-sum-exp)
+    energy = -np.log(np.sum(np.exp(logits)))
+
+    # THRESHOLD ENERGY 
+    ENERGY_THRESHOLD = 5.0
+
+    if energy > ENERGY_THRESHOLD:
+        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
+    else:
+        idx = np.argmax(probs)
+        st.success(f"Prediksi: **{labels[idx]}**")
