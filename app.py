@@ -24,16 +24,12 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-MODEL_PATH = "model_baseline.h5"
-FILE_ID = "1pkcAsPZyXmeVRtGjNgJaa7HNjpoaKPhg"
-URL = f"https://drive.google.com/uc?id={FILE_ID}"
-
+# DOWNLOAD MODEL DARI DRIVE
+MODEL_PATH = "model_afterAug_FT.h5"
+URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
-        gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
-
-st.write("File size:", os.path.getsize(MODEL_PATH))
-        
+        gdown.download(URL, MODEL_PATH, quiet=False)
 # LOAD MODEL
 model = tf.keras.models.load_model(MODEL_PATH)
 # LOAD CLASS INDICES
