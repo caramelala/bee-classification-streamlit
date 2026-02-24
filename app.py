@@ -64,8 +64,6 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-   import scipy.stats as stats
-
 # PREPROCESS & PREDICT
 if uploaded_file:
     img = Image.open(uploaded_file).convert("RGB")
