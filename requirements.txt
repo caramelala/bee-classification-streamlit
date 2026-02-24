@@ -5,4 +5,4 @@ pillow
 opencv-python
 gdown
 h5py
-
+scipy
