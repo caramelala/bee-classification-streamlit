@@ -5,7 +5,6 @@ import json
 import os
 import gdown
 from PIL import Image
-import scipy.stats as stats
 
 # CSS WATERMARK
 st.markdown("""
@@ -66,18 +65,13 @@ if uploaded_file:
     img_array = np.expand_dims(img_array, axis=0)
 
     # PREDIKSI
-    pred = model.predict(img_array)[0]   # shape: (num_classes,)
+pred = model.predict(img_array)
 
-    # HITUNG ENTROPY
-    entropy = stats.entropy(pred)
+probs = pred[0]
+entropy = -np.sum(probs * np.log(probs + 1e-9))
 
-    # AMBIL KELAS TERBESAR
-    idx = np.argmax(pred)
-
-    # THRESHOLD ENTROPY (bisa kamu tuning)
-    ENTROPY_TH = 1.2
-
-    if entropy > ENTROPY_TH:
-        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
-    else:
-        st.success(f"Prediksi: **{labels[idx]}**")
+if entropy > 1.2:
+    st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
+else:
+    idx = np.argmax(probs)
+    st.success(f"Prediksi: **{labels[idx]}**")
