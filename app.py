@@ -24,33 +24,17 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# DOWNLOAD MODEL DARI GOOGLE DRIVE
+# DOWNLOAD MODEL DARI DRIVE
 MODEL_PATH = "model_afterAug_FT.h5"
 URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
-
 if not os.path.exists(MODEL_PATH):
-
     with st.spinner("Downloading model..."):
-        gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
-
-# Cek ukuran file (harus > 1MB minimal)
-if os.path.exists(MODEL_PATH):
-    if os.path.getsize(MODEL_PATH) < 1000000:
-        st.error("Model file corrupt atau gagal download.")
-        st.stop()
-
-model = tf.keras.models.load_model(MODEL_PATH)
-
-with st.spinner("Downloading model..."):
-    gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
-
+        gdown.download(URL, MODEL_PATH, quiet=False)
 # LOAD MODEL
 model = tf.keras.models.load_model(MODEL_PATH)
-
 # LOAD CLASS INDICES
 with open("class_indices.json") as f:
     class_indices = json.load(f)
-
 labels = {v: k for k, v in class_indices.items()}
 
 # STREAMLIT UI
