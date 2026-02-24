@@ -25,8 +25,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD MODEL DARI DRIVE
-MODEL_PATH = "model_afterAug_FT.h5"
-URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
+MODEL_PATH = "model_baseline.h5"
+URL = "https://drive.google.com/file/d/1pkcAsPZyXmeVRtGjNgJaa7HNjpoaKPhg"
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
         gdown.download(URL, MODEL_PATH, quiet=False)
