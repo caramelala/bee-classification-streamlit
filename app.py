@@ -82,6 +82,6 @@ if uploaded_file:
 
     pred = model.predict(img_array)
     idx = np.argmax(pred)
-    st.success(f"Prediksi: **{labels[idx]}**")
+    st.success(f"Prediksi: *{labels[idx]}*")
 
     
