@@ -85,11 +85,5 @@ if uploaded_file:
     confidence = np.max(pred)
     idx = np.argmax(pred)
 
-    THRESHOLD = 0.80
-    MAX_REALISTIC_CONF = 0.995  # filter overconfident anomali
-
-    if confidence < THRESHOLD or confidence > MAX_REALISTIC_CONF:
-        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
-    else:
-        st.success(f"Prediksi: **{labels[idx]}**")
-        st.write(f"Confidence: {confidence:.4f}")
+    st.success(f"Prediksi: **{labels[idx]}**")
+    st.write(f"Confidence: {confidence:.4f}")
