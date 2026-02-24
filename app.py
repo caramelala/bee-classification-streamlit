@@ -64,6 +64,14 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    pred = model.predict(img_array)
-    idx = np.argmax(pred)
+pred = model.predict(img_array)
+confidence = np.max(pred)
+idx = np.argmax(pred)
+
+THRESHOLD = 0.6  # bisa ubah ke 0.5 / 0.7 sesuai kebutuhan
+
+if confidence < THRESHOLD:
+    st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
+else:
     st.success(f"Prediksi: **{labels[idx]}**")
+    st.write(f"Confidence: {confidence:.2f}")
