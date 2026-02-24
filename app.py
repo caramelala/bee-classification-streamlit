@@ -25,8 +25,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD MODEL DARI GOOGLE DRIVE
-MODEL_PATH = "model_afterAug_FT.h5"
-URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
+MODEL_PATH = "model_finetune.h5"
+URL = "https://drive.google.com/file/d/18f83EZMQI9ZrfqK5oo3WCh8arf1bVeHs"  
 
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
