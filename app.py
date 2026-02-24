@@ -67,11 +67,5 @@ if uploaded_file:
 pred = model.predict(img_array)
 confidence = np.max(pred)
 idx = np.argmax(pred)
-
-THRESHOLD = 0.9
-
-if confidence < THRESHOLD:
-    st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
-else:
     st.success(f"Prediksi: **{labels[idx]}**")
     st.write(f"Confidence: {confidence:.2f}")
