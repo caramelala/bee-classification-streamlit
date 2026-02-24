@@ -75,19 +75,15 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    # PREDIKSI
-    pred = model.predict(img_array)[0]   # shape: (num_classes,)
+# PREPROCESS & PREDICT
+if uploaded_file:
+    img = Image.open(uploaded_file).convert("RGB")
+    st.image(img, caption="Uploaded Image", use_column_width=True)
 
-    # HITUNG ENTROPY
-    entropy = stats.entropy(pred)
+    img = img.resize((224, 224))
+    img_array = np.array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
 
-    # AMBIL KELAS TERBESAR
+    pred = model.predict(img_array)
     idx = np.argmax(pred)
-
-    # THRESHOLD ENTROPY (bisa kamu tuning)
-    ENTROPY_TH = 1.2
-
-    if entropy > ENTROPY_TH:
-        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
-    else:
-        st.success(f"Prediksi: **{labels[idx]}**")
+    st.success(f"Prediksi: *{labels[idx]}*")
