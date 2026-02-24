@@ -81,7 +81,7 @@ if uploaded_file:
     energy = -np.log(np.sum(np.exp(logits)))
 
     # THRESHOLD ENERGY 
-    ENERGY_THRESHOLD = 5.0
+    ENERGY_THRESHOLD = 8.0
 
     if energy > ENERGY_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
