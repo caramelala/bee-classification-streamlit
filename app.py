@@ -64,7 +64,7 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-# PREPROCESS & PREDICT
+# PREPROCESS & PREDICT (ENERGY-BASED OOD)
 if uploaded_file:
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Uploaded Image", use_column_width=True)
@@ -73,15 +73,20 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-# PREPROCESS & PREDICT
-if uploaded_file:
-    img = Image.open(uploaded_file).convert("RGB")
-    st.image(img, caption="Uploaded Image", use_column_width=True)
+    # Softmax prediction
+    probs = model.predict(img_array, verbose=0)[0]
 
-    img = img.resize((224, 224))
-    img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+    # Logits prediction
+    logits = logits_model.predict(img_array, verbose=0)[0]
 
-    pred = model.predict(img_array)
-    idx = np.argmax(pred)
-    st.success(f"Prediksi: *{labels[idx]}*")
+    # ENERGY SCORE (log-sum-exp)
+    energy = -np.log(np.sum(np.exp(logits)))
+
+    # THRESHOLD ENERGY
+    ENERGY_THRESHOLD = 4.5  
+
+    if energy > ENERGY_THRESHOLD:
+        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
+    else:
+        idx = np.argmax(probs)
+        st.success(f"Prediksi: **{labels[idx]}**")
