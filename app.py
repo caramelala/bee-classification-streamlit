@@ -85,23 +85,11 @@ if uploaded_file:
     confidence = np.max(pred)
     idx = np.argmax(pred)
 
-    # Ambil top 2 probability
-    sorted_pred = np.sort(pred)
-    top1 = sorted_pred[-1]
-    top2 = sorted_pred[-2]
-    gap = top1 - top2
-
     THRESHOLD = 0.80
-    GAP_THRESHOLD = 0.40
+    MAX_REALISTIC_CONF = 0.995  # filter overconfident anomali
 
-    # DEBUG (boleh dihapus nanti)
-    st.write("Top1:", top1)
-    st.write("Top2:", top2)
-    st.write("Gap :", gap)
-
-    # LOGIC UNKNOWN
-    if confidence < THRESHOLD or gap < GAP_THRESHOLD:
+    if confidence < THRESHOLD or confidence > MAX_REALISTIC_CONF:
         st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
     else:
         st.success(f"Prediksi: **{labels[idx]}**")
-        st.write(f"Confidence: {confidence:.2f}")
+        st.write(f"Confidence: {confidence:.4f}")
