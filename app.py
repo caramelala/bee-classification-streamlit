@@ -25,8 +25,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD MODEL DARI DRIVE
-MODEL_PATH = "model_finetune.h5"
-URL = "https://drive.google.com/file/d/18f83EZMQI9ZrfqK5oo3WCh8arf1bVeHs"
+MODEL_PATH = "model_baseline.h5"
+URL = "https://drive.google.com/file/d/1pkcAsPZyXmeVRtGjNgJaa7HNjpoaKPhg"
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
         gdown.download(URL, MODEL_PATH, quiet=False)
@@ -70,7 +70,7 @@ sorted_pred = np.sort(pred)
 gap = sorted_pred[-1] - sorted_pred[-2]
 idx = np.argmax(pred)
 
-GAP_THRESHOLD = 0.25
+GAP_THRESHOLD = 0.60
 
 if gap < GAP_THRESHOLD:
     st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
