@@ -40,10 +40,10 @@ logits_model = tf.keras.Model(
     outputs=model.layers[-1].input
 )
 
-# LOAD CLASS INDICES
 with open("class_indices.json") as f:
     class_indices = json.load(f)
 
+# BALIK mapping: index → label
 labels = {int(v): k for k, v in class_indices.items()}
 
 # STREAMLIT UI
@@ -64,22 +64,18 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-# PREPROCESS & PREDICT
 if uploaded_file:
     img = Image.open(uploaded_file).convert("RGB")
-    st.image(img, caption="Uploaded Image", use_column_width=True)
+    st.image(img, use_column_width=True)
 
     img = img.resize((224, 224))
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    # PREDIKSI
-    pred = model.predict(img_array, verbose=0)
+    pred = model.predict(img_array)
     idx = int(np.argmax(pred))
-    label = labels[idx]
 
-    # LOGIKA UNKNOWN
-    if label.lower() == "objek":
-        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
+    if idx in labels:
+        st.success(f"Prediksi: **{labels[idx]}**")
     else:
-        st.success(f"Prediksi: **{label}**")
+        st.warning("Prediksi: **Unknown (label tidak dikenali)**")
