@@ -1,12 +1,11 @@
 import streamlit as st
 import tensorflow as tf
 import numpy as np
-import json
 import os
 import gdown
 from PIL import Image
 
-# CSS WATERMARK
+# WATERMARK
 st.markdown("""
 <style>
 .watermark {
@@ -24,24 +23,27 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# DOWNLOAD & LOAD MODEL
+# DOWNLOAD MODEL
 MODEL_PATH = "model_with_unknown.h5"
 URL = "https://drive.google.com/uc?id=1DnRyCyEQgPQBEcNx28QkwNcIEhw7eQrS"
 
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
-        gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
+        gdown.download(URL, MODEL_PATH, quiet=False)
 
+# LOAD MODEL
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# LOAD CLASS INDICES
-with open("class_indices.json", "r") as f:
-    class_indices = json.load(f)
+# LABEL (HARDCODE — PALING AMAN)
+labels = {
+    0: "Geniotrigona thoracica",
+    1: "Tetragonula laeviceps",
+    2: "Tetragonula testaceitarsis",
+    3: "Tetrigona binghami",
+    4: "Unknown"
+}
 
-# balik mapping: index → label
-labels = {int(v): k for k, v in class_indices.items()}
-
-# STREAMLIT UI
+# UI
 st.title("🐝 Bee Classification App")
 st.markdown(
     """
@@ -58,7 +60,7 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-# PREPROCESS & PREDICT
+# PREDIKSI
 if uploaded_file:
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Uploaded Image", use_column_width=True)
@@ -72,8 +74,7 @@ if uploaded_file:
 
     label = labels.get(idx, "Unknown")
 
-    # Kalau kamu pakai kelas 'objek' sebagai unknown
-    if label.lower() in ["objek", "unknown", "non_lebah"]:
-        st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
+    if label.lower() == "unknown":
+        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
     else:
         st.success(f"Prediksi: **{label}**")
