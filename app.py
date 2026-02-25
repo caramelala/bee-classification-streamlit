@@ -65,9 +65,21 @@ uploaded_file = st.file_uploader(
 )
 
 # PREPROCESS & PREDICT
-idx = int(np.argmax(pred))
+if uploaded_file:
+    img = Image.open(uploaded_file).convert("RGB")
+    st.image(img, caption="Uploaded Image", use_column_width=True)
 
-if idx not in labels:
-    st.warning("Prediksi: **Unknown (label tidak dikenali model)**")
-else:
-    st.success(f"Prediksi: **{labels[idx]}**")
+    img = img.resize((224, 224))
+    img_array = np.array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+
+    # PREDIKSI
+    pred = model.predict(img_array, verbose=0)
+    idx = int(np.argmax(pred))
+    label = labels[idx]
+
+    # LOGIKA UNKNOWN
+    if label.lower() == "objek":
+        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
+    else:
+        st.success(f"Prediksi: **{label}**")
