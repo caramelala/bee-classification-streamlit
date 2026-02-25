@@ -72,10 +72,11 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    pred = model.predict(img_array)
-    idx = int(np.argmax(pred))
+pred = model.predict(img_array)
+idx = int(np.argmax(pred))
+label = labels[idx]
 
-    if idx in labels:
-        st.success(f"Prediksi: **{labels[idx]}**")
-    else:
-        st.warning("Prediksi: **Unknown (label tidak dikenali)**")
+if label.lower() == "objek":
+    st.warning("Prediksi: **Unknown (objek di luar lebah)**")
+else:
+    st.success(f"Prediksi: **{label}**")
