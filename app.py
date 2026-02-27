@@ -83,11 +83,11 @@ if uploaded_file:
     st.write(f"Energy Score: {energy:.4f}")
 
     # DECISION
-    idx = int(np.argmax(preds))
-    confidence = float(np.max(preds))
-
-    st.write(f"Confidence: {confidence:.4f}")
-
+    CONF_THRESHOLD = 0.90
+    
+    idx = int(np.argmax(probs))
+    confidence = float(np.max(probs))
+    
     if confidence < CONF_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
     else:
