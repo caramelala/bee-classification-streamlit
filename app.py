@@ -71,9 +71,7 @@ if uploaded_file:
     preds = model.predict(img_array, verbose=0)
 
     # ENERGY CALCULATION
-    temperature = 1.0
-    logits = np.log(preds + 1e-8)  # avoid log(0)
-    energy = -temperature * np.log(np.sum(np.exp(logits / temperature)))
+    CONF_THRESHOLD = 0.75
 
     # Threshold (HARUS DI-TUNING)
     ENERGY_THRESHOLD = 1.5
@@ -85,7 +83,12 @@ if uploaded_file:
     st.write(f"Energy Score: {energy:.4f}")
 
     # DECISION
-    if energy > ENERGY_THRESHOLD:
+    idx = int(np.argmax(preds))
+    confidence = float(np.max(preds))
+
+    st.write(f"Confidence: {confidence:.4f}")
+
+    if confidence < CONF_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
     else:
         label = labels.get(idx, "Unknown")
