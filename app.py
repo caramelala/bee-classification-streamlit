@@ -58,7 +58,7 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-# PREDIKSI + ENERGY
+# PREDIKSI
 if uploaded_file:
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Uploaded Image", use_column_width=True)
@@ -70,24 +70,14 @@ if uploaded_file:
     # Predict
     preds = model.predict(img_array, verbose=0)
 
-    # ENERGY CALCULATION
-    CONF_THRESHOLD = 0.75
-
-    # Threshold (HARUS DI-TUNING)
-    ENERGY_THRESHOLD = 1.5
-
     idx = int(np.argmax(preds))
     confidence = float(np.max(preds))
 
     st.write(f"Confidence: {confidence:.4f}")
-    st.write(f"Energy Score: {energy:.4f}")
 
-    # DECISION
+    # Threshold (bisa kamu tuning)
     CONF_THRESHOLD = 0.90
-    
-    idx = int(np.argmax(probs))
-    confidence = float(np.max(probs))
-    
+
     if confidence < CONF_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
     else:
