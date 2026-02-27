@@ -24,8 +24,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD MODEL
-MODEL_PATH = "model_with_unknown.h5"
-URL = "https://drive.google.com/uc?id=1DnRyCyEQgPQBEcNx28QkwNcIEhw7eQrS"
+MODEL_PATH = "model_afterAug_FT.h5"
+URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
 
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
@@ -34,13 +34,11 @@ if not os.path.exists(MODEL_PATH):
 # LOAD MODEL
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# LABEL (HARDCODE — PALING AMAN)
 labels = {
     0: "Geniotrigona thoracica",
     1: "Tetragonula laeviceps",
     2: "Tetragonula testaceitarsis",
     3: "Tetrigona binghami",
-    4: "Unknown"
 }
 
 # UI
@@ -60,7 +58,7 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-# PREDIKSI
+# PREDIKSI + ENERGY
 if uploaded_file:
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Uploaded Image", use_column_width=True)
@@ -69,12 +67,26 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    pred = model.predict(img_array, verbose=0)
-    idx = int(np.argmax(pred))
+    # Predict
+    preds = model.predict(img_array, verbose=0)
 
-    label = labels.get(idx, "Unknown")
+    # ENERGY CALCULATION
+    temperature = 1.0
+    logits = np.log(preds + 1e-8)  # avoid log(0)
+    energy = -temperature * np.log(np.sum(np.exp(logits / temperature)))
 
-    if label.lower() == "unknown":
-        st.warning("Prediksi: **Unknown (Objek di luar kelas lebah)**")
+    # Threshold (HARUS DI-TUNING)
+    ENERGY_THRESHOLD = 1.5
+
+    idx = int(np.argmax(preds))
+    confidence = float(np.max(preds))
+
+    st.write(f"Confidence: {confidence:.4f}")
+    st.write(f"Energy Score: {energy:.4f}")
+
+    # DECISION
+    if energy > ENERGY_THRESHOLD:
+        st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
     else:
+        label = labels.get(idx, "Unknown")
         st.success(f"Prediksi: **{label}**")
