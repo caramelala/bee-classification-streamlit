@@ -88,8 +88,11 @@ if uploaded_file:
     st.write(f"Energy Score: {energy:.4f}")
 
     # 4. THRESHOLD
+    ENERGY_THRESHOLD = -3.1
     CONF_THRESHOLD = 0.85
-    ENERGY_THRESHOLD = -8
     
     if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
         st.warning("Unknown (Objek di luar lebah)")
+    else:
+        label = labels[idx]
+        st.success(f"Prediksi: {label}")
