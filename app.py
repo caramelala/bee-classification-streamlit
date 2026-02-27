@@ -88,7 +88,7 @@ if uploaded_file:
     st.write(f"Energy Score: {energy:.4f}")
 
     # 4. THRESHOLD
-    ENERGY_THRESHOLD = 7.0  
+    ENERGY_THRESHOLD = -5.5  
 
     if energy > ENERGY_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
