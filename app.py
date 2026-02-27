@@ -25,8 +25,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # DOWNLOAD MODEL DARI DRIVE
-MODEL_PATH = "model_with_unknown.h5"
-URL = "https://drive.google.com/uc?id=1DnRyCyEQgPQBEcNx28QkwNcIEhw7eQrS"
+MODEL_PATH = "model_afterAug_FT_logits.h5"
+URL = "https://drive.google.com/uc?id=1v7HhpYopAoBMVfnGSC0FIshu4rDX1pku"
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
         gdown.download(URL, MODEL_PATH, quiet=False)
@@ -55,15 +55,35 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-# PREPROCESS & PREDICT
+# PREPROCESS & PREDICT (ENERGY VERSION)
 if uploaded_file:
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Uploaded Image", use_column_width=True)
 
+    # preprocessing
     img = img.resize((224, 224))
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    pred = model.predict(img_array)
-    idx = np.argmax(pred)
-    st.success(f"Prediksi: **{labels[idx]}**")
+    # ambil LOGITS
+    logits = model.predict(img_array, verbose=0)[0]
+
+    # hitung ENERGY SCORE
+    energy = -np.log(np.sum(np.exp(logits)))
+
+    # softmax hanya untuk display
+    probs = tf.nn.softmax(logits).numpy()
+    idx = int(np.argmax(probs))
+    confidence = float(np.max(probs))
+
+    st.write(f"Confidence: {confidence:.4f}")
+    st.write(f"Energy Score: {energy:.4f}")
+
+    # threshold 
+    CONF_THRESHOLD = 0.85
+    ENERGY_THRESHOLD = -12   # hasil analisis energy kamu
+
+    if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
+        st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
+    else:
+        st.success(f"Prediksi: **{labels[idx]}**")
