@@ -86,7 +86,7 @@ if uploaded_file:
 
     # threshold 
     CONF_THRESHOLD = 0.85
-    ENERGY_THRESHOLD = -12   # hasil analisis energy 
+    ENERGY_THRESHOLD = -9   # hasil analisis energy 
 
     if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
