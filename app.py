@@ -26,7 +26,7 @@ st.markdown("""
 
 # DOWNLOAD MODEL DARI DRIVE
 MODEL_PATH = "model_afterAug_FT_logits.h5"
-URL = "https://drive.google.com/uc?id=1v7HhpYopAoBMVfnGSC0FIshu4rDX1pku"
+URL = "https://drive.google.com/uc?id=1T7fyazI0JiyJM9yBcdZ2P3dsV2hVB3Re"
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
         gdown.download(URL, MODEL_PATH, quiet=False)
@@ -81,7 +81,7 @@ if uploaded_file:
 
     # threshold 
     CONF_THRESHOLD = 0.85
-    ENERGY_THRESHOLD = -12   # hasil analisis energy kamu
+    ENERGY_THRESHOLD = -12   # hasil analisis energy 
 
     if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
         st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
