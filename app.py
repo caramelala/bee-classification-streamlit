@@ -65,11 +65,16 @@ if uploaded_file:
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    # ambil LOGITS
+    # ambil logits
     logits = model.predict(img_array, verbose=0)[0]
-
-    # hitung ENERGY SCORE
-    energy = -np.log(np.sum(np.exp(logits)))
+    
+    # TEMPERATURE (sesuai jurnal)
+    T = 1.0
+    
+    # ENERGY SCORE (RUMUS JURNAL)
+    energy = -T * np.log(
+        np.sum(np.exp(logits / T))
+    )
 
     # softmax hanya untuk display
     probs = tf.nn.softmax(logits).numpy()
