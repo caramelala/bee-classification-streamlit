@@ -92,3 +92,7 @@ if uploaded_file:
         st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
     else:
         st.success(f"Prediksi: **{labels[idx]}**")
+        st.write("CONF_THRESHOLD:", CONF_THRESHOLD)
+        st.write("ENERGY_THRESHOLD:", ENERGY_THRESHOLD)
+        st.write("Energy > Threshold ?", energy > ENERGY_THRESHOLD)
+
