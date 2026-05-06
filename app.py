@@ -85,7 +85,7 @@ if uploaded_file:
     st.write(f"Energy Score: {energy:.4f}")
 
     # threshold 
-    CONF_THRESHOLD = 0.85
+    
     ENERGY_THRESHOLD = -17 # hasil analisis energy 
 
     if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
