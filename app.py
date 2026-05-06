@@ -71,7 +71,7 @@ if uploaded_file:
     # TEMPERATURE (sesuai jurnal)
     T = 1.0
     
-   # ENERGY SCORE (RUMUS JURNAL)
+  # ENERGY SCORE (RUMUS JURNAL)
 energy = -T * np.log(
     np.sum(np.exp(logits / T))
 )
