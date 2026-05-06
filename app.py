@@ -71,15 +71,18 @@ if uploaded_file:
     # TEMPERATURE (sesuai jurnal)
     T = 1.0
     
-  # ENERGY SCORE
-    energy = -T * np.log(
+ # prediksi model
+logits = model.predict(x, verbose=0)[0]
+
+# energy score
+energy = -T * np.log(
     np.sum(np.exp(logits / T))
 )
 
-# convert ke tensor dulu
+# convert tensor
 logits = tf.convert_to_tensor(logits)
 
-# softmax hanya untuk display
+# softmax
 probs = tf.nn.softmax(logits).numpy()
 idx = int(np.argmax(probs))
 confidence = float(np.max(probs))
