@@ -96,7 +96,7 @@ logits = model.predict(x, verbose=0)[0]
 # TEMPERATURE
 T = 1.0
 
-# ENERGY SCORE
+# ENERGY SCORE (RUMUS JURNAL)
 energy = -T * np.log(
     np.sum(np.exp(logits / T))
 )
@@ -110,12 +110,14 @@ st.write(f"Confidence: {confidence:.4f}")
 st.write(f"Energy Score: {energy:.4f}")
 
 # threshold
-ENERGY_THRESHOLD = -17
+CONF_THRESHOLD = 0.85
+ENERGY_THRESHOLD = -17  # hasil analisis energy
 
-if energy > ENERGY_THRESHOLD:
+if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
     st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
 else:
     st.success(f"Prediksi: **{labels[idx]}**")
 
+st.write("CONF_THRESHOLD:", CONF_THRESHOLD)
 st.write("ENERGY_THRESHOLD:", ENERGY_THRESHOLD)
 st.write("Energy > Threshold ?", energy > ENERGY_THRESHOLD)
