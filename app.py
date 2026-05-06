@@ -90,23 +90,32 @@ confidence = float(np.max(probs))
 st.write(f"Confidence: {confidence:.4f}")
 st.write(f"Energy Score: {energy:.4f}")
 
- # ENERGY SCORE (RUMUS JURNAL)
-    energy = -T * np.log(
-        np.sum(np.exp(logits / T))
-    )
-    # softmax hanya untuk display
-    probs = tf.nn.softmax(logits).numpy()
-    idx = int(np.argmax(probs))
-    confidence = float(np.max(probs))
-    st.write(f"Confidence: {confidence:.4f}")
-    st.write(f"Energy Score: {energy:.4f}")
-    # threshold 
-    
-    ENERGY_THRESHOLD = -17 # hasil analisis energy 
-    if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
-        st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
-    else:
-        st.success(f"Prediksi: **{labels[idx]}**")
-        st.write("CONF_THRESHOLD:", CONF_THRESHOLD)
-        st.write("ENERGY_THRESHOLD:", ENERGY_THRESHOLD)
-        st.write("Energy > Threshold ?", energy > ENERGY_THRESHOLD)
+# prediksi
+logits = model.predict(x, verbose=0)[0]
+
+# TEMPERATURE
+T = 1.0
+
+# ENERGY SCORE
+energy = -T * np.log(
+    np.sum(np.exp(logits / T))
+)
+
+# softmax hanya untuk display
+probs = tf.nn.softmax(logits).numpy()
+idx = int(np.argmax(probs))
+confidence = float(np.max(probs))
+
+st.write(f"Confidence: {confidence:.4f}")
+st.write(f"Energy Score: {energy:.4f}")
+
+# threshold
+ENERGY_THRESHOLD = -17
+
+if energy > ENERGY_THRESHOLD:
+    st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
+else:
+    st.success(f"Prediksi: **{labels[idx]}**")
+
+st.write("ENERGY_THRESHOLD:", ENERGY_THRESHOLD)
+st.write("Energy > Threshold ?", energy > ENERGY_THRESHOLD)
