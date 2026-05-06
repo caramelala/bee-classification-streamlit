@@ -71,10 +71,13 @@ if uploaded_file:
     # TEMPERATURE (sesuai jurnal)
     T = 1.0
     
-  # ENERGY SCORE (RUMUS JURNAL)
+  # ENERGY SCORE
     energy = -T * np.log(
     np.sum(np.exp(logits / T))
 )
+
+# convert ke tensor dulu
+logits = tf.convert_to_tensor(logits)
 
 # softmax hanya untuk display
 probs = tf.nn.softmax(logits).numpy()
@@ -84,7 +87,6 @@ confidence = float(np.max(probs))
 st.write(f"Confidence: {confidence:.4f}")
 st.write(f"Energy Score: {energy:.4f}")
 
-# threshold berdasarkan analisis distribusi energy
 ENERGY_THRESHOLD = -17
 
 if energy > ENERGY_THRESHOLD:
@@ -92,6 +94,5 @@ if energy > ENERGY_THRESHOLD:
 else:
     st.success(f"Prediksi: **{labels[idx]}**")
 
-# tampilkan info analisis
 st.write("ENERGY_THRESHOLD:", ENERGY_THRESHOLD)
 st.write("Energy > Threshold ?", energy > ENERGY_THRESHOLD)
