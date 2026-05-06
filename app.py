@@ -61,9 +61,9 @@ if uploaded_file:
     st.image(img, caption="Uploaded Image", use_column_width=True)
 
     # preprocessing
-    img = img.resize((224,224))
-    x = np.array(img)/255.0
-    x = np.expand_dims(x, axis=0)
+    img = img.resize((224, 224))
+    img_array = np.array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
 
     # ambil logits
     logits = model.predict(img_array, verbose=0)[0]
