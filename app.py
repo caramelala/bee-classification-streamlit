@@ -6,7 +6,9 @@ import os
 import gdown
 from PIL import Image
 
+# =========================
 # CSS WATERMARK
+# =========================
 st.markdown("""
 <style>
 .watermark {
@@ -24,20 +26,32 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# DOWNLOAD MODEL DARI DRIVE
+# =========================
+# DOWNLOAD MODEL
+# =========================
 MODEL_PATH = "model_afterAug_FT_logits.h5"
 URL = "https://drive.google.com/uc?id=1T7fyazI0JiyJM9yBcdZ2P3dsV2hVB3Re"
+
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
         gdown.download(URL, MODEL_PATH, quiet=False)
+
+# =========================
 # LOAD MODEL
+# =========================
 model = tf.keras.models.load_model(MODEL_PATH)
-# LOAD CLASS INDICES
+
+# =========================
+# LOAD LABEL
+# =========================
 with open("class_indices.json") as f:
     class_indices = json.load(f)
+
 labels = {v: k for k, v in class_indices.items()}
 
-# STREAMLIT UI
+# =========================
+# UI
+# =========================
 st.title("🐝 Bee Classification App")
 
 st.markdown(
@@ -55,69 +69,49 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-# PREPROCESS & PREDICT (ENERGY VERSION)
+# =========================
+# PREDIKSI
+# =========================
 if uploaded_file:
+
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Uploaded Image", use_column_width=True)
 
-    # preprocessing
+    # Preprocessing
     img = img.resize((224, 224))
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    # ambil logits
+    # Predict logits
     logits = model.predict(img_array, verbose=0)[0]
-    
-    # TEMPERATURE (sesuai jurnal)
+
+    # Temperature
     T = 1.0
-    
- # prediksi model
-logits = model.predict(x, verbose=0)[0]
 
-# energy score
-energy = -T * np.log(
-    np.sum(np.exp(logits / T))
-)
+    # Energy Score
+    energy = -T * np.log(
+        np.sum(np.exp(logits / T))
+    )
 
-# convert tensor
-logits = tf.convert_to_tensor(logits)
+    # Softmax
+    probs = tf.nn.softmax(logits).numpy()
+    idx = int(np.argmax(probs))
+    confidence = float(np.max(probs))
 
-# softmax
-probs = tf.nn.softmax(logits).numpy()
-idx = int(np.argmax(probs))
-confidence = float(np.max(probs))
+    st.write(f"Confidence: {confidence:.4f}")
+    st.write(f"Energy Score: {energy:.4f}")
 
-st.write(f"Confidence: {confidence:.4f}")
-st.write(f"Energy Score: {energy:.4f}")
+    # Threshold
+    CONF_THRESHOLD = 0.85
+    ENERGY_THRESHOLD = -17
 
-# prediksi
-logits = model.predict(x, verbose=0)[0]
+    # Decision
+    if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
+        st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
+    else:
+        st.success(f"Prediksi: **{labels[idx]}**")
 
-# TEMPERATURE
-T = 1.0
-
-# ENERGY SCORE (RUMUS JURNAL)
-energy = -T * np.log(
-    np.sum(np.exp(logits / T))
-)
-
-# softmax hanya untuk display
-probs = tf.nn.softmax(logits).numpy()
-idx = int(np.argmax(probs))
-confidence = float(np.max(probs))
-
-st.write(f"Confidence: {confidence:.4f}")
-st.write(f"Energy Score: {energy:.4f}")
-
-# threshold
-CONF_THRESHOLD = 0.85
-ENERGY_THRESHOLD = -17  # hasil analisis energy
-
-if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
-    st.warning("Prediksi: **Unknown (Objek di luar lebah)**")
-else:
-    st.success(f"Prediksi: **{labels[idx]}**")
-
-st.write("CONF_THRESHOLD:", CONF_THRESHOLD)
-st.write("ENERGY_THRESHOLD:", ENERGY_THRESHOLD)
-st.write("Energy > Threshold ?", energy > ENERGY_THRESHOLD)
+    # Debug info
+    st.write("CONF_THRESHOLD:", CONF_THRESHOLD)
+    st.write("ENERGY_THRESHOLD:", ENERGY_THRESHOLD)
+    st.write("Energy > Threshold ?", energy > ENERGY_THRESHOLD)
