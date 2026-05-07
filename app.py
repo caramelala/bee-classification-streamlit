@@ -5,7 +5,9 @@ import os
 import gdown
 from PIL import Image
 
+# =========================
 # WATERMARK
+# =========================
 st.markdown("""
 <style>
 .watermark {
@@ -23,7 +25,9 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# =========================
 # DOWNLOAD MODEL
+# =========================
 MODEL_PATH = "model_afterAug_FT.h5"
 URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
 
@@ -31,10 +35,14 @@ if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
         gdown.download(URL, MODEL_PATH, quiet=False)
 
+# =========================
 # LOAD MODEL
+# =========================
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# LABEL (HARDCODE — PALING AMAN)
+# =========================
+# LABEL
+# =========================
 labels = {
     0: "Geniotrigona thoracica",
     1: "Tetragonula laeviceps",
@@ -43,7 +51,9 @@ labels = {
     4: "Unknown"
 }
 
+# =========================
 # UI
+# =========================
 st.title("🐝 Bee Classification App")
 st.markdown(
     """
@@ -55,35 +65,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-uploaded_file = st.file_uploader(
-    label="Upload gambar lebah",
-    type=["jpg", "jpeg", "png"],
-    label_visibility="visible"
-)
-st.markdown("""
-<style>
-/* Hilangkan drag & drop besar */
-[data-testid="stFileUploaderDropzone"] {
-    padding: 0px !important;
-    border: none !important;
-}
+# ⬇️ INI YANG BIKIN BALIK KE TAMPILAN LAMA
+st.write("Upload gambar lebah")
+uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"])
 
-/* Kecilkan box upload */
-[data-testid="stFileUploader"] {
-    width: 300px;
-}
-
-/* Rapihin tulisan */
-[data-testid="stFileUploader"] section {
-    padding: 5px !important;
-}
-</style>
-""", unsafe_allow_html=True)
 # =========================
 # PREDIKSI
 # =========================
 if uploaded_file:
-
     img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="Uploaded Image", use_column_width=True)
 
