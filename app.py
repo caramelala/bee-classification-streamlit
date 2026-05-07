@@ -1,14 +1,11 @@
 import streamlit as st
 import tensorflow as tf
 import numpy as np
-import json
 import os
 import gdown
 from PIL import Image
 
-# =========================
-# CSS WATERMARK
-# =========================
+# WATERMARK
 st.markdown("""
 <style>
 .watermark {
@@ -26,34 +23,28 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# =========================
 # DOWNLOAD MODEL
-# =========================
-MODEL_PATH = "model_afterAug_FT_logits.h5"
-URL = "https://drive.google.com/uc?id=1T7fyazI0JiyJM9yBcdZ2P3dsV2hVB3Re"
+MODEL_PATH = "model_afterAug_FT.h5"
+URL = "https://drive.google.com/uc?id=1I7H0W-BNJEhlnUsdjyltoummMShWvfug"
 
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model..."):
         gdown.download(URL, MODEL_PATH, quiet=False)
 
-# =========================
 # LOAD MODEL
-# =========================
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# =========================
-# LOAD LABEL
-# =========================
-with open("class_indices.json") as f:
-    class_indices = json.load(f)
+# LABEL (HARDCODE — PALING AMAN)
+labels = {
+    0: "Geniotrigona thoracica",
+    1: "Tetragonula laeviceps",
+    2: "Tetragonula testaceitarsis",
+    3: "Tetrigona binghami",
+    4: "Unknown"
+}
 
-labels = {v: k for k, v in class_indices.items()}
-
-# =========================
 # UI
-# =========================
 st.title("🐝 Bee Classification App")
-
 st.markdown(
     """
     <p style='text-align:center; font-size:16px; color:black;'>
@@ -65,10 +56,9 @@ st.markdown(
 )
 
 uploaded_file = st.file_uploader(
-    "Upload gambar lebah",
+    "Upload gambar",
     type=["jpg", "jpeg", "png"]
 )
-
 # =========================
 # PREDIKSI
 # =========================
