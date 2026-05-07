@@ -101,7 +101,7 @@ if uploaded_file:
     st.write(f"Energy Score: {energy:.4f}")
 
     # Threshold
-    CONF_THRESHOLD = 0.95
+    CONF_THRESHOLD = 0.85
     ENERGY_THRESHOLD = -17
 
     # Decision
