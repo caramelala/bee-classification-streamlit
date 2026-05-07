@@ -102,7 +102,7 @@ if uploaded_file:
 
     # Threshold
     CONF_THRESHOLD = 0.85
-    ENERGY_THRESHOLD = -17
+    ENERGY_THRESHOLD = -12
 
     # Decision
     if confidence < CONF_THRESHOLD or energy > ENERGY_THRESHOLD:
