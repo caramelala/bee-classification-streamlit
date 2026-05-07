@@ -56,9 +56,29 @@ st.markdown(
 )
 
 uploaded_file = st.file_uploader(
-    "Upload gambar",
-    type=["jpg", "jpeg", "png"]
+    label="Upload gambar lebah",
+    type=["jpg", "jpeg", "png"],
+    label_visibility="visible"
 )
+st.markdown("""
+<style>
+/* Hilangkan drag & drop besar */
+[data-testid="stFileUploaderDropzone"] {
+    padding: 0px !important;
+    border: none !important;
+}
+
+/* Kecilkan box upload */
+[data-testid="stFileUploader"] {
+    width: 300px;
+}
+
+/* Rapihin tulisan */
+[data-testid="stFileUploader"] section {
+    padding: 5px !important;
+}
+</style>
+""", unsafe_allow_html=True)
 # =========================
 # PREDIKSI
 # =========================
